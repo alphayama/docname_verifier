@@ -49,7 +49,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def info_version(self):
         QtWidgets.QMessageBox.about(self,"Version","Version 1.0.0")
 
-    
+    #this function uses pymupdf library to open PDFs and convert their first page to image.
+    #image localization is performed
     def pdf_to_image(self):
         ctr=-1	#iterator to count image files and use them as row no.
         curr_file=''    #current file path
