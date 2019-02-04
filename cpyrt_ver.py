@@ -22,7 +22,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow()    #Qt window object
         self.ui.setupUi(self)
         self.setWindowTitle('Copyright Verifier')   #set window title
-        self.filename=''
+        self.dir_name=''
 
         #set column width of table
         self.ui.tableWidget.setColumnWidth(0,300)
@@ -41,8 +41,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def file_open_folder(self):  #open folder function
         directory=QtWidgets.QFileDialog()
         directory.setFileMode(QtWidgets.QFileDialog.Directory)
-        self.filename=directory.getExistingDirectory()
-        if self.filename:
+        self.dir_name=directory.getExistingDirectory()
+        if self.dir_name:
             self.pdf_to_image()
 
     #version information
@@ -55,21 +55,21 @@ class MainWindow(QtWidgets.QMainWindow):
         ctr=-1	#iterator to count image files and use them as row no.
         curr_file=''    #current file path
         self.ui.tableWidget.setCursor(QtCore.Qt.BusyCursor)
-        for files in os.listdir(self.filename):
+        for files in os.listdir(self.dir_name):
             if files.split('.')[1]=='pdf':
                 ctr+=1
-                doc=fitz.open(self.filename+'/'+files)
+                doc=fitz.open(self.dir_name+'/'+files)
                 for img in doc.getPageImageList(0):
                     xref = img[0]
                     pix = fitz.Pixmap(doc, xref)
                     if pix.n < 5:       # this is GRAY or RGB
-                        pix.writePNG(self.filename+"/pg1_temp.png")
+                        pix.writePNG(self.dir_name+"/pg1_temp.png")
                     else:               # CMYK: convert to RGB first
                         pix1 = fitz.Pixmap(fitz.csRGB, pix)
-                        pix1.writePNG(self.filename+"/pg1_temp.png")
+                        pix1.writePNG(self.dir_name+"/pg1_temp.png")
                         pix1 = None
                     pix = None
-                image=Image.open(self.filename+'/pg1_temp.png')
+                image=Image.open(self.dir_name+'/pg1_temp.png')
                 image=image.resize((850,1400),Image.ANTIALIAS) 
                 year=files.split('.')[0].split('=')[1].split('-')[0].split('(')[0]
                 year=int(year)
@@ -93,14 +93,15 @@ class MainWindow(QtWidgets.QMainWindow):
                     box=[400,340,660,500]
                 else:                           
                     box=[400,160,730,460]
-                curr_file=self.filename+"/../temp.png"
+                new_dir=self.dir_name+'/../'+self.dir_name.split('/')[-1]+'_corrected'
+                if not os.path.exists(new_dir):
+                    os.mkdir(new_dir)
+                curr_file=new_dir+"/regno_"+files.split('.')[0]+".png"
                 image.crop(box).resize((300,200), Image.ANTIALIAS).save(curr_file)
                 print(ctr) 
                 self.out_img_fname(curr_file,files.split('.')[0],ctr)
+                self.save_transfer(new_dir)
         self.ui.tableWidget.unsetCursor()
-        #clean up temporary files  
-        os.remove(self.filename+'/pg1_temp.png')
-        #os.remove(curr_file)
         print('Complete!') #back-end console output
 
     #outputs localized regions and filenames to tabel cells
@@ -113,8 +114,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget.setItem(iter,2,QtWidgets.QTableWidgetItem(str(file_name)))
 
     #saves and transfers files
-    def save_transfer(self):
-
+    def save_transfer(self,d_name):
+        # print(str(self.ui.tableWidget.))
         pass
 
 #Main code
