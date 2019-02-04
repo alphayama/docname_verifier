@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets,QtCore, uic,QtGui
 import sys,os
 import fitz
 from PIL import Image
+from shutil import copy2
 
 # Qt GUI python script
 from cpyrt_gui import Ui_MainWindow
@@ -34,7 +35,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.actionOpen.triggered.connect(self.file_open_folder)
         #Show version
         self.ui.actionVersion.triggered.connect(self.info_version)
-
+        #Save File
+        self.ui.actionSave_Changes.triggered.connect(self.save_transfer)
         # self.ui.tableWidget.setItem(0,0,QtWidgets.QTableWidgetItem(filename))
 
     #this function opens a folder which contains the files
@@ -53,12 +55,13 @@ class MainWindow(QtWidgets.QMainWindow):
     #image localization is performed
     def pdf_to_image(self):
         ctr=-1	#iterator to count image files and use them as row no.
-        curr_file=''    #current file path
+        curr_img=''    #current file path
         self.ui.tableWidget.setCursor(QtCore.Qt.BusyCursor)
         for files in os.listdir(self.dir_name):
             if files.split('.')[1]=='pdf':
                 ctr+=1
-                doc=fitz.open(self.dir_name+'/'+files)
+                self.original_path=self.dir_name+'/'+files
+                doc=fitz.open(self.original_path)
                 for img in doc.getPageImageList(0):
                     xref = img[0]
                     pix = fitz.Pixmap(doc, xref)
@@ -93,14 +96,16 @@ class MainWindow(QtWidgets.QMainWindow):
                     box=[400,340,660,500]
                 else:                           
                     box=[400,160,730,460]
-                new_dir=self.dir_name+'/../'+self.dir_name.split('/')[-1]+'_corrected'
-                if not os.path.exists(new_dir):
-                    os.mkdir(new_dir)
-                curr_file=new_dir+"/regno_"+files.split('.')[0]+".png"
-                image.crop(box).resize((300,200), Image.ANTIALIAS).save(curr_file)
+                self.new_dir=self.dir_name+'/../'+self.dir_name.split('/')[-1]+'_corrected'
+                if not os.path.exists(self.new_dir):
+                    os.mkdir(self.new_dir)
+                curr_img=self.new_dir+"/regno_"+files.split('.')[0]+".png"
+                image.crop(box).resize((300,200), Image.ANTIALIAS).save(curr_img)
                 print(ctr) 
-                self.out_img_fname(curr_file,files.split('.')[0],ctr)
-                self.save_transfer(new_dir)
+                self.out_img_fname(curr_img,files.split('.')[0],ctr)
+                #self.save_transfer(self.dir_name+'/'+files,new_dir,ctr)
+        self.no_of_files=ctr	    #saves no. of files-1\
+        print(self.no_of_files)
         self.ui.tableWidget.unsetCursor()
         print('Complete!') #back-end console output
 
@@ -114,9 +119,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget.setItem(iter,2,QtWidgets.QTableWidgetItem(str(file_name)))
 
     #saves and transfers files
-    def save_transfer(self,d_name):
-        # print(str(self.ui.tableWidget.))
-        pass
+    def save_transfer(self):
+        for i in range(0,self.no_of_files+1):
+            copy2(self.original_path,self.new_dir+"/"+self.ui.tableWidget.item(i,2).text())
+        print('saved!')     #console message
 
 #Main code
 app = QtWidgets.QApplication([])
