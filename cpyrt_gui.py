@@ -74,8 +74,8 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.nextButton.setText(_translate("MainWindow", "Next Set"))
-        self.tableWidget.setWhatsThis(_translate("MainWindow", "<html><head/><body><p>This table displays and lets you edit data</p></body></html>"))
+        self.nextButton.setText(_translate("MainWindow", "Save Changes and Load Next Batch"))
+        #self.tableWidget.setWhatsThis(_translate("MainWindow", "<html><head/><body><p>This table displays and lets you edit data</p></body></html>"))
         item = self.tableWidget.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Image"))
         item = self.tableWidget.horizontalHeaderItem(1)
@@ -88,5 +88,5 @@ class Ui_MainWindow(object):
         self.actionOpen.setText(_translate("MainWindow", "&Open Folder..."))
         self.actionExit.setText(_translate("MainWindow", "&Exit"))
         self.actionVersion.setText(_translate("MainWindow", "&Version"))
-        self.actionSave_Changes.setText(_translate("MainWindow", "&Save Changes"))
+        self.actionSave_Changes.setText(_translate("MainWindow", "&Save Changes in Current Batch"))
 
