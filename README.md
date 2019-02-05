@@ -31,7 +31,7 @@ Linux and macOS may have Python 2 as default, then use:<br>
 
 
 ## Main files in this repository
-1. _docname_verif.pdf_ <br>
+1. _docname_verif.py_ <br>
 This is the main code. It contains the back-end of the program. <br><br>
 2. _docver_gui.py_ <br>
 Qt User Interface file (.ui) was converted to Python3 code using pyuic5. This utility converts .ui files to .py. This Python code serves as the front-end of the program.<br><br>
