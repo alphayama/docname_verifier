@@ -103,7 +103,7 @@ class MainWindow(QtWidgets.QMainWindow):
             elif self.year<=63:
                 self.box=[380,360,620,580]
             elif self.year<=70:
-                self.box=[390,150,610,400]
+                self.box=[390,150,610,420]
             elif self.year<=72:
                 self.box=[320,350,740,460]       #[left,top,right,bottom]
             elif self.year<=81:
@@ -141,12 +141,13 @@ class MainWindow(QtWidgets.QMainWindow):
     def save_transfer(self):
         for i in range(0,self.no_of_files):
             copy2(self.dir_name+'/'+self.batches[self.batch_no][i],self.new_dir+"/"+self.ui.tableWidget.item(i,2).text()+'.pdf')
-            #os.remove(self.dir_name+'/'+self.batches[self.batch_no][i])
+            os.remove(self.dir_name+'/'+self.batches[self.batch_no][i])
 
     #exits the GUI       
     def closeEvent(self,event):
         if os.path.isfile(self.dir_name+'/pg1_temp.png'):
             os.remove(self.dir_name+'/pg1_temp.png')
+            
         event.accept()
 
 #Main code
