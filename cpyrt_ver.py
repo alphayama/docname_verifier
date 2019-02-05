@@ -33,12 +33,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.actionExit.triggered.connect(self.closeEvent)
         #Open folder
         self.ui.actionOpen.triggered.connect(self.file_open_folder)
+        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+O"),self).activated.connect(self.file_open_folder)
         #Show version
         self.ui.actionVersion.triggered.connect(self.info_version)
         #Save File
-        self.ui.actionSave_Changes.triggered.connect(self.save_transfer)
+        self.ui.actionSave_Changes.triggered.connect(self.next_batch)
         # Save and load next batch
         self.ui.nextButton.clicked.connect(self.next_batch)
+        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+S"),self).activated.connect(self.next_batch)
     
     #this function increments batch no.
     def next_batch(self):
