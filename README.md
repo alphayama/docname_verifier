@@ -1,5 +1,6 @@
 # Document Name Verifier
 
+_Note: This program uses Qt 5 as GUI. I used PyQt5 library instead of PySide2 suggested by The Qt Company. I uploaded this program on GitHub as an example to show integration of Qt with Python._<br><br>
 This is a small project that I worked upon while doing my internship. The organization had done OCR on some documents where the output was a PDF document with recognized text and the Registration no. of a document was their filename. However, some of the registeration nos. were recognized incorrectly, hence, the filename was wrong too. <br><br>
 After observations, location of registration no. on the document was found to be in a particular region for a period of time. Using this information, image localization was performed to get a cropped area of first page of each document.<br><br>
 This program takes a directory containing PDFs as input and then performs:<br>
