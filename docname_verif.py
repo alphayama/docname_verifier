@@ -105,7 +105,7 @@ class MainWindow(QtWidgets.QMainWindow):
             elif self.year<=70:
                 self.box=[390,150,610,420]
             elif self.year<=72:
-                self.box=[320,350,740,460]       #[left,top,right,bottom]
+                self.box=[300,350,740,460]       #[left,top,right,bottom]
             elif self.year<=81:
                 self.box=[370,160,720,460]
             elif self.year>=84 and self.year<=90:
