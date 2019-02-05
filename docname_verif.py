@@ -22,7 +22,7 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__()
         self.ui = Ui_MainWindow()    #Qt window object
         self.ui.setupUi(self)
-        self.setWindowTitle('Copyright Verifier')   #set window title
+        self.setWindowTitle('Document Name Verifier')   #set window title
         self.dir_name=''
         self.ui.nextButton.setEnabled(False)
         #set column width of table
@@ -142,9 +142,11 @@ class MainWindow(QtWidgets.QMainWindow):
         for i in range(0,self.no_of_files):
             copy2(self.dir_name+'/'+self.batches[self.batch_no][i],self.new_dir+"/"+self.ui.tableWidget.item(i,2).text()+'.pdf')
             #os.remove(self.dir_name+'/'+self.batches[self.batch_no][i])
-            
+
+    #exits the GUI       
     def closeEvent(self,event):
-        os.remove(self.dir_name+'/pg1_temp.png')
+        if os.path.isfile(self.dir_name+'/pg1_temp.png'):
+            os.remove(self.dir_name+'/pg1_temp.png')
         event.accept()
 
 #Main code

@@ -1,4 +1,4 @@
-# docname_verifier
+# Document Name Verifier
 
 ## Requirements
 - Python 3
