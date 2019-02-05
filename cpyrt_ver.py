@@ -83,8 +83,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget.setCursor(QtCore.Qt.BusyCursor)
         for files in self.batches[self.batch_no]:
             self.p2i_iter+=1
-            self.original_path=self.dir_name+'/'+files
-            doc=fitz.open(self.original_path)
+            doc=fitz.open(self.dir_name+'/'+files)
             for img in doc.getPageImageList(0):
                 xref = img[0]
                 pix = fitz.Pixmap(doc, xref)
@@ -125,14 +124,9 @@ class MainWindow(QtWidgets.QMainWindow):
                 os.mkdir(self.new_dir)
             curr_img=self.new_dir+"/regno_"+files.split('.')[0]+".png"
             image.crop(self.box).resize((300,200), Image.ANTIALIAS).save(curr_img)
-            #print(self.p2i_iter) 
             self.out_img_fname(curr_img,files.split('.')[0],self.p2i_iter)
-            os.remove(self.dir_name+'/pg1_temp.png')
-            #self.save_transfer(self.dir_name+'/'+files,new_dir,ctr)
-        self.no_of_files=self.p2i_iter+1	    #saves no. of files\
-        #print(self.no_of_files)
+        self.no_of_files=self.p2i_iter+1	    #saves no. of files
         self.ui.tableWidget.unsetCursor()
-        #print('Complete!') #back-end console output
 
     #outputs localized regions and filenames to tabel cells
     def out_img_fname(self,img_path,file_name,iter):
