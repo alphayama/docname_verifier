@@ -5,7 +5,7 @@ from PIL import Image
 from shutil import copy2
 
 # Qt GUI python script
-from cpyrt_gui import Ui_MainWindow
+from docver_gui import Ui_MainWindow
 
 #ImageWidget class: Used for displaying image in QTableWidget table cell
 class ImageWidget(QtWidgets.QLabel):
@@ -79,7 +79,7 @@ class MainWindow(QtWidgets.QMainWindow):
     #image localization is performed
     def pdf_to_image(self):
         self.p2i_iter=-1	#iterator to count image files and use them as row no.
-        curr_img=''    #current file path
+        self.curr_img=''    #current file path
         self.ui.tableWidget.setCursor(QtCore.Qt.BusyCursor)
         for files in self.batches[self.batch_no]:
             self.p2i_iter+=1
@@ -94,27 +94,27 @@ class MainWindow(QtWidgets.QMainWindow):
                     pix1.writePNG(self.dir_name+"/pg1_temp.png")
                     pix1 = None
                 pix = None
-            image=Image.open(self.dir_name+'/pg1_temp.png')
-            image=image.resize((850,1400),Image.ANTIALIAS) 
-            year=files.split('.')[0].split('=')[1].split('-')[0].split('(')[0]
-            year=int(year)
-            if year<=59:
+            self.image=Image.open(self.dir_name+'/pg1_temp.png')
+            self.image=self.image.resize((850,1400),Image.ANTIALIAS) 
+            self.year=files.split('.')[0].split('=')[1].split('-')[0].split('(')[0]
+            self.year=int(self.year)
+            if self.year<=59:
                 self.box=[350,120,680,420]
-            elif year<=63:
+            elif self.year<=63:
                 self.box=[380,360,620,580]
-            elif year<=70:
+            elif self.year<=70:
                 self.box=[390,150,610,370]
-            elif year<=72:
+            elif self.year<=72:
                 self.box=[320,350,740,460]       #[left,top,right,bottom]
-            elif year<=81:
+            elif self.year<=81:
                 self.box=[370,160,720,460]
-            elif year>=84 and year<=90:
+            elif self.year>=84 and self.year<=90:
                 self.box=[390,120,750,460]
-            elif year==91:
+            elif self.year==91:
                 self.box=[400,290,730,600]
-            elif year>=96 and year<=2013:
+            elif self.year>=96 and self.year<=2013:
                 self.box=[410,160,600,310]                          
-            elif year>=2014 and year<=2017:
+            elif self.year>=2014 and self.year<=2017:
                 self.box=[400,340,660,500]
             else:                           
                 self.box=[400,160,730,460]
@@ -122,9 +122,9 @@ class MainWindow(QtWidgets.QMainWindow):
             self.new_dir=self.dir_name+'/../'+self.dir_name.split('/')[-1]+'_corrected'
             if not os.path.exists(self.new_dir):
                 os.mkdir(self.new_dir)
-            curr_img=self.new_dir+"/regno_"+files.split('.')[0]+".png"
-            image.crop(self.box).resize((300,200), Image.ANTIALIAS).save(curr_img)
-            self.out_img_fname(curr_img,files.split('.')[0],self.p2i_iter)
+            self.curr_img=self.new_dir+"/regno_"+files.split('.')[0]+".png"
+            self.image.crop(self.box).resize((300,200), Image.ANTIALIAS).save(self.curr_img)
+            self.out_img_fname(self.curr_img,files.split('.')[0],self.p2i_iter)
         self.no_of_files=self.p2i_iter+1	    #saves no. of files
         self.ui.tableWidget.unsetCursor()
 
@@ -141,7 +141,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def save_transfer(self):
         for i in range(0,self.no_of_files):
             copy2(self.dir_name+'/'+self.batches[self.batch_no][i],self.new_dir+"/"+self.ui.tableWidget.item(i,2).text()+'.pdf')
-            os.remove(self.dir_name+'/'+self.batches[self.batch_no][i])
+            #os.remove(self.dir_name+'/'+self.batches[self.batch_no][i])
             
     def closeEvent(self,event):
         os.remove(self.dir_name+'/pg1_temp.png')
