@@ -39,7 +39,9 @@ This is the main code. It contains the back-end of the program. <br><br>
 2. _docver_gui.py_ <br>
 Qt User Interface file (.ui) was converted to Python3 code using pyuic5. This utility converts .ui files to .py. This Python code serves as the front-end of the program.<br><br>
 3. _docver_gui.ui_ <br>
-Although not required by the program, it is included if UI needs to be changed using Qt Designer/Creator instead of modifying the python script.
+Although not required by the program, it is included if UI needs to be changed using Qt Designer/Creator instead of modifying the python script.<br><br>
+4. _docname_verif.bat_ <br>
+This is a Batch file. It launches the program on Windows and exits.
 
 ## Problems
 The program is a bit slow which was an unpleasant experience.
