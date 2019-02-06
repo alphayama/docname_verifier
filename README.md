@@ -19,8 +19,8 @@ This program takes a directory containing PDFs as input and then performs:<br>
 - PyMuPDF
 - Pillow (PIL)
 
-Install using :    `pip install -u requirements.txt` <br><br>
-_Note: It is recommended to use Python virtual environments like venv and conda environments_
+Install using :    `pip install --user requirements.txt` <br><br>
+_Note: It is recommended to use Python virtual environments like venv and conda environments._
 
 ## Run Program
 General:<br>
@@ -28,6 +28,9 @@ General:<br>
 <br><br>
 Linux and macOS may have Python 2 as default, then use:<br>
 `python3 docname_verif.py`
+<br><br>
+On Windows, Python allows you to launch in windowed mode:<br>
+`pythonw docname_verif.py`
 
 
 ## Main files in this repository
