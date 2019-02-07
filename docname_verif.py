@@ -3,6 +3,7 @@ import sys,os
 import fitz
 from PIL import Image
 from shutil import copy2
+import csv
 
 # Qt GUI python script
 from docver_gui import Ui_MainWindow
@@ -51,6 +52,10 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.batch_no>=len(self.batches):
             self.ui.nextButton.setEnabled(False)
             QtWidgets.QMessageBox.information(self,"Finished","This was the last batch. \nChanges were saved")
+            if os.path.isfile(self.dir_name+'/pg1_temp.png'):
+                os.remove(self.dir_name+'/pg1_temp.png')
+            os.rmdir(self.dir_name)
+            self.generate_csv()
         else:
             self.pdf_to_image()
         
@@ -62,7 +67,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.dir_name=directory.getExistingDirectory()
         if self.dir_name:
             self.file_list=os.listdir(self.dir_name)
-            self.pdf_list=[]
+            self.pdf_list=[]    #list of pdf filenames
+            self.new_pdf_list=[]    #list of modified pdf filenames
+            # self.mod_pdf_list=[]    #lists of yes/no if modifications were made
             for files in os.listdir(self.dir_name):
                 if files.split('.')[1]=='pdf':
                     self.pdf_list.append(files)
@@ -87,13 +94,16 @@ class MainWindow(QtWidgets.QMainWindow):
             for img in doc.getPageImageList(0):
                 xref = img[0]
                 pix = fitz.Pixmap(doc, xref)
-                if pix.n < 5:       # this is GRAY or RGB
-                    pix.writePNG(self.dir_name+"/pg1_temp.png")
-                else:               # CMYK: convert to RGB first
-                    pix1 = fitz.Pixmap(fitz.csRGB, pix)
-                    pix1.writePNG(self.dir_name+"/pg1_temp.png")
-                    pix1 = None
+                # if pix.n < 5:       # this is GRAY or RGB
+                #     pix.writeImage(self.dir_name+"/pg1_temp.bmp",output=)
+                # else:               # CMYK: convert to RGB first
+                #     pix1 = fitz.Pixmap(fitz.csRGB, pix)
+                #     pix1.writeImage(self.dir_name+"/pg1_temp.bmp")
+                #     pix1 = None
+                pix=fitz.Pixmap(fitz.csGRAY,pix)
+                pix.writePNG(self.dir_name+"/pg1_temp.png")
                 pix = None
+            
             self.image=Image.open(self.dir_name+'/pg1_temp.png')
             self.image=self.image.resize((850,1400),Image.ANTIALIAS) 
             self.year=files.split('.')[0].split('=')[1].split('-')[0].split('(')[0]
@@ -103,7 +113,7 @@ class MainWindow(QtWidgets.QMainWindow):
             elif self.year<=63:
                 self.box=[380,360,620,580]
             elif self.year<=70:
-                self.box=[390,150,610,420]
+                self.box=[390,150,610,450]
             elif self.year<=72:
                 self.box=[300,350,740,460]       #[left,top,right,bottom]
             elif self.year<=81:
@@ -128,7 +138,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.no_of_files=self.p2i_iter+1	    #saves no. of files
         self.ui.tableWidget.unsetCursor()
 
-    #outputs localized regions and filenames to tabel cells
+    #outputs localized regions and filenames to table cells
     def out_img_fname(self,img_path,file_name,iter):
         image = ImageWidget(img_path)
         self.ui.tableWidget.insertRow(iter)
@@ -140,14 +150,19 @@ class MainWindow(QtWidgets.QMainWindow):
     #saves and transfers files
     def save_transfer(self):
         for i in range(0,self.no_of_files):
+            self.new_pdf_list.append(self.ui.tableWidget.item(i,2).text()+'.pdf')
             copy2(self.dir_name+'/'+self.batches[self.batch_no][i],self.new_dir+"/"+self.ui.tableWidget.item(i,2).text()+'.pdf')
             os.remove(self.dir_name+'/'+self.batches[self.batch_no][i])
+    
+    def generate_csv(self):
+        with open(self.new_dir+'/CHANGES_'+self.dir_name.split('/')[-1]+'.csv','w',newline='') as dat_file:
+            dat_file_writer=csv.writer(dat_file,delimiter=',')
+            dat_file_writer.writerow(['Original','Modified'])
+            dat_file_writer.writerows(zip(self.pdf_list,self.new_pdf_list))
+        pass
 
     #exits the GUI       
     def closeEvent(self,event):
-        if os.path.isfile(self.dir_name+'/pg1_temp.png'):
-            os.remove(self.dir_name+'/pg1_temp.png')
-            
         event.accept()
 
 #Main code
