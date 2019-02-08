@@ -46,7 +46,7 @@ class MainWindow(QtWidgets.QMainWindow):
     #this function increments batch no.
     def next_batch(self):
         self.save_transfer()
-        for i in reversed(range(self.ui.tableWidget.rowCount())):
+        for i in reversed(range(self.ui.tableWidget.rowCount())):   #removes row
             self.ui.tableWidget.removeRow(i)
         self.batch_no+=1
         if self.batch_no>=len(self.batches):
@@ -69,7 +69,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.file_list=os.listdir(self.dir_name)
             self.pdf_list=[]    #list of pdf filenames
             self.new_pdf_list=[]    #list of modified pdf filenames
-            # self.mod_pdf_list=[]    #lists of yes/no if modifications were made
+            # self.mod_pdf_list=[]    #lists of yes/no if modifications were made(removed feature)
             for files in os.listdir(self.dir_name):
                 if files.split('.')[1]=='pdf':
                     self.pdf_list.append(files)
@@ -94,12 +94,6 @@ class MainWindow(QtWidgets.QMainWindow):
             for img in doc.getPageImageList(0):
                 xref = img[0]
                 pix = fitz.Pixmap(doc, xref)
-                # if pix.n < 5:       # this is GRAY or RGB
-                #     pix.writeImage(self.dir_name+"/pg1_temp.bmp",output=)
-                # else:               # CMYK: convert to RGB first
-                #     pix1 = fitz.Pixmap(fitz.csRGB, pix)
-                #     pix1.writeImage(self.dir_name+"/pg1_temp.bmp")
-                #     pix1 = None
                 pix=fitz.Pixmap(fitz.csGRAY,pix)
                 pix.writePNG(self.dir_name+"/pg1_temp.png")
                 pix = None
@@ -127,8 +121,8 @@ class MainWindow(QtWidgets.QMainWindow):
             elif self.year>=2014 and self.year<=2017:
                 self.box=[400,340,660,500]
             else:                           
-                self.box=[400,160,730,460]
-            #self.box=[350,120,750,600]
+                self.box=[350,120,750,600]  #General box
+            #self.box=[400,160,730,460]
             self.new_dir=self.dir_name+'/../'+self.dir_name.split('/')[-1]+'_corrected'
             if not os.path.exists(self.new_dir):
                 os.mkdir(self.new_dir)
@@ -158,8 +152,7 @@ class MainWindow(QtWidgets.QMainWindow):
         with open(self.new_dir+'/CHANGES_'+self.dir_name.split('/')[-1]+'.csv','w',newline='') as dat_file:
             dat_file_writer=csv.writer(dat_file,delimiter=',')
             dat_file_writer.writerow(['Original','Modified'])
-            dat_file_writer.writerows(zip(self.pdf_list,self.new_pdf_list))
-        pass
+            dat_file_writer.writerows(zip(self.pdf_list,self.new_pdf_list))     #zip creates a tuple
 
     #exits the GUI       
     def closeEvent(self,event):
