@@ -148,8 +148,9 @@ class MainWindow(QtWidgets.QMainWindow):
             copy2(self.dir_name+'/'+self.batches[self.batch_no][i],self.new_dir+"/"+self.ui.tableWidget.item(i,2).text()+'.pdf')
             os.remove(self.dir_name+'/'+self.batches[self.batch_no][i])
     
+    #Generates a .csv file
     def generate_csv(self):
-        with open(self.new_dir+'/CHANGES_'+self.dir_name.split('/')[-1]+'.csv','w',newline='') as dat_file:
+        with open(self.new_dir+'/CHANGES_'+self.dir_name.split('/')[-1]+'.csv','x',newline='') as dat_file:
             dat_file_writer=csv.writer(dat_file,delimiter=',')
             dat_file_writer.writerow(['Original','Modified'])
             dat_file_writer.writerows(zip(self.pdf_list,self.new_pdf_list))     #zip creates a tuple
