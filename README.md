@@ -9,6 +9,7 @@ This program takes a directory containing PDFs as input and then performs:<br>
 3. At a time, only 3 entries are shown. The documents are divided into batches each containing 3 files
 4. Changes are saved after user moves on to next batch
 5. The files are renamed and moved to a new folder. Localized images are also saved.
+6. A .csv file is generated which contains the original and final names.
 
 ## Requirements
 - Python 3
@@ -42,6 +43,10 @@ Qt User Interface file (.ui) was converted to Python3 code using pyuic5. This ut
 Although not required by the program, it is included if UI needs to be changed using Qt Designer/Creator instead of modifying the python script.<br><br>
 4. _docname_verif.bat_ <br>
 This is a Batch file. It launches the program on Windows and exits.
+
+## Screenshots
+
+Screenshots of the main window are in the repo's wiki at: https://github.com/alphrho/docname_verifier/wiki/Screenshots:-Main-Window
 
 ## Problems
 The program is a bit slow which was an unpleasant experience.
