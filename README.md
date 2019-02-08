@@ -31,7 +31,7 @@ Linux and macOS may have Python 2 as default, then use:<br>
 `python3 docname_verif.py`
 <br><br>
 On Windows, Python allows you to launch in windowed mode:<br>
-`pythonw docname_verif.py`
+`pythonw docname_verif.py` <br> _or you may launch the program using the Batch file._
 
 
 ## Main files in this repository
